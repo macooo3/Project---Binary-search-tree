@@ -31,7 +31,6 @@ class Tree {
     function orderTree(array, start = 0, end = array.length - 1) {
       if (start > end) return null;
       let mid = Math.floor((start + end) / 2);
-      console.log(mid);
       let root = new Node(array[mid]);
       root.left = orderTree(array, start, mid - 1);
       root.right = orderTree(array, mid + 1, end);
@@ -43,12 +42,10 @@ class Tree {
   }
 
   insert(value, root = this.root) {
-  
-
     if (root === null) {
       return new Node(value);
     }
-    if (value === root.data) return this.root;
+    if (value === root.data) return root;
     if (value < root.data) {
       root.left = this.insert(value, root.left);
     } else if (value > root.data) {
@@ -59,13 +56,52 @@ class Tree {
   }
 
   delete(value, root = this.root) {
-    
+    if (value === root.data) {
+      if (root.right === null) {
+        return root.left;
+      }
+      if (root.left === null) {
+        return root.right;
+      }
+      if(root.left && root.right){
+        let current = root.right 
+        while (current.left != null){
+          current = current.left
+        }
+        root.data = current.data
+        root.right = this.delete(current.data, root.right);
+        return root
+      }
+    }
+    if (value < root.data) {
+      root.left = this.delete(value, root.left);
+    } else if (value > root.data) {
+      root.right = this.delete(value, root.right);
+    }
+   
+    return root;
   }
-}
 
-const arrayT = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-// [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345]
-const array = [1, 2, 5, 6, 8, 9, 10, 11];
+  find(value, root = this.root){
+    if(value === root.data){
+      return root
+    } 
+
+    if (value < root.data) {
+      return this.find(value, root.left);
+    } else if (value > root.data) {
+      return this.find(value, root.right);
+    }
+  }
+  levelOrder(callback){
+  
+  }
+  }
+
+
+const arrayT = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324,];
+// [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 700, 6345]
+const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const test = new Tree();
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -80,6 +116,18 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
-const nodes = test.buildTree(array);
-console.log(test.insert(4));
+const nodes = test.buildTree(arrayT);
+// console.log(test.insert(4));
+console.log(test.delete(67));
+// console.log(test.find(324));
 prettyPrint(nodes);
+
+const ifgreater = function(num){
+  let arr =[]
+  if (num > 30){
+    arr.push(num)
+  }
+  return arr
+}
+
+test.levelOrder(ifgreater)
