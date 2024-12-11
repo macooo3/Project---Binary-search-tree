@@ -63,14 +63,14 @@ class Tree {
       if (root.left === null) {
         return root.right;
       }
-      if(root.left && root.right){
-        let current = root.right 
-        while (current.left != null){
-          current = current.left
+      if (root.left && root.right) {
+        let current = root.right;
+        while (current.left != null) {
+          current = current.left;
         }
-        root.data = current.data
+        root.data = current.data;
         root.right = this.delete(current.data, root.right);
-        return root
+        return root;
       }
     }
     if (value < root.data) {
@@ -78,14 +78,14 @@ class Tree {
     } else if (value > root.data) {
       root.right = this.delete(value, root.right);
     }
-   
+
     return root;
   }
 
-  find(value, root = this.root){
-    if(value === root.data){
-      return root
-    } 
+  find(value, root = this.root) {
+    if (value === root.data) {
+      return root;
+    }
 
     if (value < root.data) {
       return this.find(value, root.left);
@@ -93,13 +93,48 @@ class Tree {
       return this.find(value, root.right);
     }
   }
-  levelOrder(callback){
-  
-  }
+  levelOrder(callback) {
+    let queue = [];
+    let logs = [];
+    let tree = this.root;
+
+    function load(root) {
+      if (root) {
+        queue.push(root);
+        let current = queue[0];
+        while (queue.length !== 0) {
+          logs.push(current.data);
+          if (current.left !== null) {
+            queue.push(current.left);
+          }
+          if (current.right !== null) {
+            queue.push(current.right);
+          }
+          queue.shift();
+          current = queue[0];
+        }
+        return logs;
+      }
+    }
+    load(tree);
+    // return logs
+    return callback(logs)
   }
 
+  inOrder(callback){
 
-const arrayT = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324,];
+  }
+
+  preOrder(callback){
+
+  }
+
+  postOrder(callback){
+    
+  }
+}
+
+const arrayT = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 // [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 700, 6345]
 const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const test = new Tree();
@@ -122,12 +157,14 @@ console.log(test.delete(67));
 // console.log(test.find(324));
 prettyPrint(nodes);
 
-const ifgreater = function(num){
-  let arr =[]
-  if (num > 30){
-    arr.push(num)
-  }
-  return arr
-}
+const ifgreater = function (num) {
+  let arr = [];
+  num.forEach((num) => {
+    arr.push(num);
+  });
+  return arr;
+};
 
-test.levelOrder(ifgreater)
+console.log(test.levelOrder(ifgreater));
+// ifgreater([23, 33, 68, 27])
+// console.log(ifgreater([23, 33, 68, 27]));
