@@ -93,6 +93,7 @@ class Tree {
       return this.find(value, root.right);
     }
   }
+
   levelOrder(callback) {
     let queue = [];
     let logs = [];
@@ -117,20 +118,70 @@ class Tree {
       }
     }
     load(tree);
-    // return logs
     return callback(logs)
   }
 
   inOrder(callback){
+   let queue = [];
+    let logs = [];
+    let tree = this.root;
 
+    function load(root){
+      if(root){
+        queue.push(root)
+        if(root.left){
+          load(root.left)
+        }
+        logs.push(root.data)
+        if(root.right){
+          load(root.right)
+        }
+      }
+    }
+    load(tree)
+    return callback(logs)
   }
 
   preOrder(callback){
+    let queue = [];
+    let logs = [];
+    let tree = this.root;
 
+    function load(root){
+      if(root){
+        queue.push(root)
+        logs.push(root.data)
+        if(root.left){
+          load(root.left)
+        }
+        if(root.right){
+          load(root.right)
+        }
+      }
+    }
+    load(tree)
+    return callback(logs)
   }
 
   postOrder(callback){
-    
+    let queue = [];
+    let logs = [];
+    let tree = this.root;
+
+    function load(root){
+      if(root){
+        queue.push(root)
+        if(root.left){
+          load(root.left)
+        }
+        if(root.right){
+          load(root.right)
+        }
+        return logs.push(root.data)
+      }
+    }
+    load(tree)
+    return callback(logs)
   }
 }
 
@@ -165,6 +216,9 @@ const ifgreater = function (num) {
   return arr;
 };
 
-console.log(test.levelOrder(ifgreater));
+// console.log(test.levelOrder(ifgreater));
+// console.log(test.preOrder(ifgreater));
+// console.log(test.inOrder(ifgreater));
+// console.log(test.postOrder(ifgreater));
 // ifgreater([23, 33, 68, 27])
 // console.log(ifgreater([23, 33, 68, 27]));
