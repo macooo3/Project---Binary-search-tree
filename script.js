@@ -118,76 +118,143 @@ class Tree {
       }
     }
     load(tree);
-    return callback(logs)
+    return callback(logs);
   }
 
-  inOrder(callback){
-   let queue = [];
-    let logs = [];
-    let tree = this.root;
-
-    function load(root){
-      if(root){
-        queue.push(root)
-        if(root.left){
-          load(root.left)
-        }
-        logs.push(root.data)
-        if(root.right){
-          load(root.right)
-        }
-      }
-    }
-    load(tree)
-    return callback(logs)
-  }
-
-  preOrder(callback){
+  inOrder(callback) {
     let queue = [];
     let logs = [];
     let tree = this.root;
 
-    function load(root){
-      if(root){
-        queue.push(root)
-        logs.push(root.data)
-        if(root.left){
-          load(root.left)
+    function load(root) {
+      if (root) {
+        queue.push(root);
+        if (root.left) {
+          load(root.left);
         }
-        if(root.right){
-          load(root.right)
+        logs.push(root.data);
+        if (root.right) {
+          load(root.right);
         }
       }
     }
-    load(tree)
-    return callback(logs)
+    load(tree);
+    return callback(logs);
   }
 
-  postOrder(callback){
+  preOrder(callback) {
     let queue = [];
     let logs = [];
     let tree = this.root;
 
-    function load(root){
-      if(root){
-        queue.push(root)
-        if(root.left){
-          load(root.left)
+    function load(root) {
+      if (root) {
+        queue.push(root);
+        logs.push(root.data);
+        if (root.left) {
+          load(root.left);
         }
-        if(root.right){
-          load(root.right)
+        if (root.right) {
+          load(root.right);
         }
-        return logs.push(root.data)
       }
     }
-    load(tree)
-    return callback(logs)
+    load(tree);
+    return callback(logs);
+  }
+
+  postOrder(callback) {
+    let queue = [];
+    let logs = [];
+    let tree = this.root;
+
+    function load(root) {
+      if (root) {
+        queue.push(root);
+        if (root.left) {
+          load(root.left);
+        }
+        if (root.right) {
+          load(root.right);
+        }
+        return logs.push(root.data);
+      }
+    }
+    load(tree);
+    return callback(logs);
+  }
+  height(node) {
+    let current = this.root;
+    let nodeCount = 1;
+    let leafCount = 1;
+    while (current.data !== node) {
+      if (node > current.data) {
+        current = current.right;
+      }
+      if (node < current.data) {
+        current = current.left;
+      }
+      nodeCount++;
+      leafCount += 1;
+    }
+
+    function maxheight(root) {
+      if (root === null) return -1;
+
+      let maxL = maxheight(root.left);
+      let maxR = maxheight(root.right);
+      return Math.max(maxL, maxR) + 1;
+    }
+    const leaf = maxheight(current) + leafCount;
+
+    return leaf - nodeCount;
+  }
+
+  depth(node) {
+    let current = this.root;
+    let nodeCount = 0;
+
+    while (current.data !== node) {
+      if (node > current.data) {
+        current = current.right;
+      }
+      if (node < current.data) {
+        current = current.left;
+      }
+      nodeCount++;
+    }
+
+    return nodeCount;
+  }
+
+  isBalanced(root = this.root) {
+    const rootL = this.height(root.left.data);
+    const rootR = this.height(root.right.data);
+
+    if (Math.abs(rootL - rootR) <= 1) {
+      return true;
+    } else return false;
+  }
+
+  rebalance() {
+    if (!this.isBalanced()) {
+      const arr = function (num) {
+        let newArr = [];
+        num.forEach((num) => newArr.push(num));
+        return newArr;
+      };
+       const balanceArr = this.levelOrder(arr);
+
+    // console.log(balanceArr)
+     return this.buildTree(balanceArr);
+    
+    }
   }
 }
 
 const arrayT = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 // [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 700, 6345]
-const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const array = [1, 2, 3, 4, 5, 6, 7, 8];
 const test = new Tree();
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -204,9 +271,8 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 const nodes = test.buildTree(arrayT);
 // console.log(test.insert(4));
-console.log(test.delete(67));
+// console.log(test.delete(67));
 // console.log(test.find(324));
-prettyPrint(nodes);
 
 const ifgreater = function (num) {
   let arr = [];
@@ -215,6 +281,16 @@ const ifgreater = function (num) {
   });
   return arr;
 };
+
+console.log(test.height(4));
+console.log(test.depth(7));
+test.insert(600);
+test.insert(700);
+console.log(test.isBalanced());
+prettyPrint(nodes);
+
+test.rebalance();
+// prettyPrint(nodes);
 
 // console.log(test.levelOrder(ifgreater));
 // console.log(test.preOrder(ifgreater));
